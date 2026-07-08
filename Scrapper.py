@@ -9,10 +9,10 @@ import time
 # --- CONFIGURATION ---
 api_id = 39201837
 api_hash = 'ca4ca441f67605320f3e71f2539a3eec'
-
-# Aapka Bot Token aur Session Key yahan brackets ke andar automatic work karega
 BOT_TOKEN = '8728242418:AAFgUFtn7wfOpB38rKP5jB64kOokeC8N04c' 
-STRING_SESSION = '1BVtsOHMBu2wBsIP5CrAmCfPT8EfiF2GuS7hx-pIiysO2qCP-fLYgHgQTRkCT6SC0nC5T_q_jaNY1UFd5mpRKwWWAw3ZR2Nqe9GZLFBcoFp_jh5Pc4cOdZhO96aiMzZLFiyFnkB99rrBpxfoxPZARfRcjZCmy4fOHtyn1ly-57D4TRihk4ZcNEmHemdw5FNj6wFuSfZxesVItC3QYdIcnXAvhRFCzicsClCb6M0lPH6p2FCmFIvfRtoP2SVCvv6YMOIC9aVcNcELsECotb2vyURpckWW3jcM4pjLShjSHbbhMz-mLp6sM4whkZKedsf34ii67S-iJPARFTFcWsPVaTZ2F583LLQ4'
+
+# Aapki full accurate string session key yahan set hai
+STRING_SESSION = '1BVtsOHMBu2wBsIP5CrAmCfPT8EfiF2GuS7hx-pIiysO2qCP-fLYgHgQTRkCT6SC0nC5T_q_jaNY1UFd5mpRKwWWAw3ZR2Nqe9GZLFBcoFp_jh5Pc4cOdZhO96aiMzZLFiyFnkB99rrBpxfoxPZARfRcjZCmy4fOHtyn1ly-57D4TRihk4ZcNEmHemdw5FNj6wFuSfZxesVItC3QYdIcnXAvhRFCzicsClCb6M0lPH6p2FCmFIvfRtoP2SVCvv6YMOIC9aVcNcELsECotb2vyURpckWW3jcM4pjLShjSHbbhMz-mLp6sM4whkZKedsf34ii67S-iJPARFTFcWsPVaTZ2F583LLQ4='
 # ---------------------
 
 user_client = TelegramClient(StringSession(STRING_SESSION), api_id, api_hash)
@@ -29,8 +29,8 @@ is_running = False
 @bot_client.on(events.NewMessage(pattern='/start'))
 async def start_cmd(event):
     await event.reply(
-        "👋 **Welcome to Telegram Scraper Bot!**\n\n"
-        "Members ko add karne ke liye ye command bhejein:\n"
+        "👋 **Bot Active Aur Ready Hai!**\n\n"
+        "Members scrape karke add karne ke liye ye command bhejein:\n"
         "`/scrape [Source_Link] [Dest_Link1,Dest_Link2]`"
     )
 
