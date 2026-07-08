@@ -10,7 +10,9 @@ import time
 api_id = 39201837
 api_hash = 'ca4ca441f67605320f3e71f2539a3eec'
 BOT_TOKEN = '8728242418:AAFgUFtn7wfOpB38rKP5jB64kOokeC8N04c' 
-STRING_SESSION = '1BVtsOHMBu2wBsIP5CrAmCfPT8EfiF2GuS7hx-pIiysO2qCP-fLYgHgQTRkCT6SC0nC5T_q_jaNY1UFd5mpRKwWWAw3ZR2Nqe9GZLFBcoFp_jh5Pc4cOdZhO96aiMzZLFiyFnkB99rrBpxfoxPZARfRcjZCmy4fOHtyn1ly-57D4TRihk4ZcNEmHemdw5FNj6wFuSfZxesVItC3QYdIcnXAvhRFCzicsClCb6M0lPH6p2FCmFIvfRtoP2SVCvv6YMOIC9aVcNcELsECotb2vyURpckWW3jcM4pjLShjSHbbhMz-mLp6sM4whkZKedsf34ii67S-iJPARFTFcWsPVaTZ2F583LLQ4='
+
+# Aapka naya fresh string session yahan set hai
+STRING_SESSION = 'BQG9HsQAFlgCncNX1UkjMOc1eiAZ1ejs9YNu4UweqRjJ_Q7igQuwYh1cNOM-OaMEmFMYp9ft_G_cXe3hI29nhQujaqIdpzl17MQym0SL92bh6WfyPZsjFe5JiA3oLVU6HBvs4uOT-cyWvJsEh61Rr2FnKvDFeT5yx_PMzBPgdDXjQlSKIxKkCzhiLWK4cDM1szN3ltPFA6T8pOsmJGyxPCjlEMP1B3RrMRIr2r_MysAXS87oHxwxW9IfGEAg-lGj0ba3Umqe249dkmxs4nhi7pvQcWSI8Xphx6hRqddgPudWT3RRPSne96Yhvm5DYPS9KOlHBoZ12Ri1Ddekj3sBD0xMynUWRgAAAABQZ36KAA'
 # ---------------------
 
 user_client = TelegramClient(StringSession(STRING_SESSION), api_id, api_hash)
@@ -26,16 +28,13 @@ is_running = False
 
 @bot_client.on(events.NewMessage(pattern='/start'))
 async def start_cmd(event):
-    await event.reply(
-        "👋 **Bot Active Aur Ready Hai!**\n\n"
-        "Members scrape karke add karne ke liye ye command bhejein:\n"
-        "`/scrape [Source_Link] [Dest_Link1,Dest_Link2]`"
-    )
+    await event.reply("👋 **Bot Active Aur Ready Hai!**\n\nCommand bhejein:\n`/scrape [Source] [Dest]`")
 
 @bot_client.on(events.NewMessage(pattern='/scrape'))
 async def scrape_cmd(event):
     global is_running
     if is_running:
+        await event.reply("⚠️ Ek task pehle se chal raha hai!")
         return
 
     try:
@@ -49,13 +48,16 @@ async def scrape_cmd(event):
         is_running = True
         start_time = time.time()
 
+        print("Fetching members from source...")
         source_entity = await user_client.get_entity(source_username)
         members = await user_client.get_participants(source_entity)
-        
+        await event.reply(f"📊 Total {len(members)} members mile. 40s safe speed par adding start ho gayi hai...")
+
         dest_index = 0
 
         for member in members:
             if time.time() - start_time > 86400:
+                print("24 Hours complete. Stopping.")
                 break
 
             if not is_running:
@@ -71,14 +73,17 @@ async def scrape_cmd(event):
                     channel=dest_entity,
                     users=[member]
                 ))
+                print(f"📦 [SUCCESS] Added @{member.username} to {current_dest_username}")
                 dest_index = (dest_index + 1) % len(dest_usernames)
-                await asyncio.sleep(30) # Safe background delay
-            except Exception:
+                await asyncio.sleep(40) # Exactly 40 seconds background delay
+            except Exception as e:
+                print(f"❌ [FAILED] @{member.username}: {e}")
                 await asyncio.sleep(10)
 
         is_running = False
 
-    except Exception:
+    except Exception as e:
+        print(f"Error: {e}")
         is_running = False
 
 async def start_all():
@@ -92,3 +97,4 @@ if __name__ == '__main__':
         asyncio.run(start_all())
     except Exception as e:
         print(f"Server Stopped: {e}")
+        
