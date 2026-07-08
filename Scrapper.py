@@ -5,13 +5,16 @@ import asyncio
 import os
 import re
 import time
+import http.server
+import socketserver
+import threading
 
 # --- CONFIGURATION ---
 api_id = 39201837
 api_hash = 'ca4ca441f67605320f3e71f2539a3eec'
 BOT_TOKEN = '8728242418:AAFgUFtn7wfOpB38rKP5jB64kOokeC8N04c' 
 
-# Aapka naya fresh string session yahan set hai
+# Aapka naya backup account session key (perfectly formatted)
 STRING_SESSION = 'BQG9HsQAFlgCncNX1UkjMOc1eiAZ1ejs9YNu4UweqRjJ_Q7igQuwYh1cNOM-OaMEmFMYp9ft_G_cXe3hI29nhQujaqIdpzl17MQym0SL92bh6WfyPZsjFe5JiA3oLVU6HBvs4uOT-cyWvJsEh61Rr2FnKvDFeT5yx_PMzBPgdDXjQlSKIxKkCzhiLWK4cDM1szN3ltPFA6T8pOsmJGyxPCjlEMP1B3RrMRIr2r_MysAXS87oHxwxW9IfGEAg-lGj0ba3Umqe249dkmxs4nhi7pvQcWSI8Xphx6hRqddgPudWT3RRPSne96Yhvm5DYPS9KOlHBoZ12Ri1Ddekj3sBD0xMynUWRgAAAABQZ36KAA'
 # ---------------------
 
@@ -75,7 +78,7 @@ async def scrape_cmd(event):
                 ))
                 print(f"📦 [SUCCESS] Added @{member.username} to {current_dest_username}")
                 dest_index = (dest_index + 1) % len(dest_usernames)
-                await asyncio.sleep(40) # Exactly 40 seconds background delay
+                await asyncio.sleep(40) 
             except Exception as e:
                 print(f"❌ [FAILED] @{member.username}: {e}")
                 await asyncio.sleep(10)
@@ -86,7 +89,14 @@ async def scrape_cmd(event):
         print(f"Error: {e}")
         is_running = False
 
+def run_dummy_server():
+    PORT = int(os.environ.get("PORT", 8080))
+    Handler = http.server.SimpleHTTPRequestHandler
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        httpd.serve_forever()
+
 async def start_all():
+    threading.Thread(target=run_dummy_server, daemon=True).start()
     await user_client.start()
     await bot_client.start(bot_token=BOT_TOKEN)
     print("Bot aur User Client dono chal rahe hain...")
